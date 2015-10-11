@@ -9,10 +9,10 @@ import java.util.Properties;
  */
 public class Dispatcher {
 
-    private final Server server;
+    private final Client server;
 
     public Dispatcher(Connection conn, PrintStream out, Properties config) {
-        this.server = new Server(conn, out, config);
+        this.server = new Client(conn, out, config);
     }
 
     public void dispatch(String[] args) {

@@ -25,7 +25,7 @@ public class Main {
 //        args = new String[]{"C:/Users/David/Dev/dmtools/apps/decimill-client/config", "-a", "compileModel", "-m", "1"};
 //        args = new String[]{"C:/Users/David/Dev/dmtools/apps/decimill-client/config", "-a", "compileScenario", "-s", "1"};
 //        args = new String[]{"C:/Users/David/Dev/dmtools/apps/decimill-client/config", "-a", "compileQuery", "-q", "3"};
-//        args = new String[] {"C:/dev/projects/decimill/apps/decimill-client/config", "-a", "compileModel", "-m", "1"};
+//        args = new String[] {"C:/dev/projects/decimill/decimill-client/config", "-a", "compileModel", "-m", "1"};
         
         if (args.length == 0) {
             System.out.println("Path to config file is missing");

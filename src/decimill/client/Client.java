@@ -26,13 +26,13 @@ import jviz.JvizException;
 /**
  * @author David Stefan
  */
-public class Server {
+public class Client {
 
     private final Connection conn;
     private final PrintStream out;
     private final Properties config;
 
-    public Server(Connection conn, PrintStream out, Properties config) {
+    public Client(Connection conn, PrintStream out, Properties config) {
         this.conn = conn;
         this.out = out;
         this.config = config;
