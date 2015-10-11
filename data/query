@@ -1,0 +1,25 @@
+##Heating Season##
+
+    demand_rate = {
+        [4.3, 5.3],
+        [1.2, 2.2],
+        [7.5, 8.5],
+        [5, 6.2],
+        [4, 6],
+        [23, 25],
+        [20, 25],
+        [5, 6],
+        [1, 2],
+        [0.5, 1.2],
+        0,
+        0
+    }
+
+    demand = demand_rate * 1
+    prod = 2
+
+    boilers_consumption = if (demand > prod, demand - prod, 0)
+    
+`=sum(boilers_consumption)`
+
+##Warm Season##
