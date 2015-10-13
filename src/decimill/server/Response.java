@@ -20,8 +20,8 @@ public class Response {
     public String toString() {
         
         JSONObject json = new JSONObject();
-        json.append("status", status);
-        json.append("body", body);
+        json.put("status", status);
+        json.put("body", body);
         
         return json.toString();
     }

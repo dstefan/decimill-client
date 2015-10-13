@@ -26,24 +26,23 @@ public class Request {
         Request request = new Request();
 
         for (String key : keys) {
-            
-            // TODO: Add case for query, scenario and an array of scenarios
-            
+
             switch (key) {
+
                 case "action": {
                     request.action = json.getString(key);
-                    System.out.println("action: " + request.action);
                     break;
                 }
+
                 case "model": {
                     JSONObject jsonModel = json.getJSONObject(key);
                     request.model = new Model();
                     request.model.id = jsonModel.getInt("id");
                     request.model.text = jsonModel.getString("text");
                     request.model.namespace = jsonModel.getString("namespace");
-                    System.out.println("Model namespace: " + request.model.namespace);
                     break;
                 }
+
                 case "models": {
                     JSONArray jsonModelsArray = json.getJSONArray(key);
                     request.models = new ArrayList();
@@ -57,15 +56,65 @@ public class Request {
                     }
                     break;
                 }
+                
+                case "scenario": {
+                    JSONObject jsonScenario = json.getJSONObject(key);
+                    request.scenario = new Scenario();
+                    request.scenario.id = jsonScenario.getInt("id");
+                    request.scenario.text = jsonScenario.getString("text");
+                    request.scenario.namespace = jsonScenario.getString("namespace");
+                    break;
+                }
+                
+                case "scenarios": {
+                    JSONArray jsonScenariosArray = json.getJSONArray(key);
+                    request.scenarios = new ArrayList();
+                    for (int i = 0; i < jsonScenariosArray.length(); i++) {
+                        JSONObject jsonScenario = jsonScenariosArray.getJSONObject(i);
+                        Scenario scenario = new Scenario();
+                        scenario.id = jsonScenario.getInt("id");
+                        scenario.text = jsonScenario.getString("text");
+                        scenario.namespace = jsonScenario.getString("namespace");
+                        request.scenarios.add(scenario);
+                    }
+                    break;
+                }
+                
+                case "query": {
+                    JSONObject jsonQuery = json.getJSONObject(key);
+                    request.query = new Query();
+                    request.query.id = jsonQuery.getInt("id");
+                    request.query.text = jsonQuery.getString("text");
+                    request.query.studyId = jsonQuery.getInt("studuId");
+                    break;
+                }
             }
         }
-        
+
         return request;
     }
-    
+
     @Override
     public String toString() {
-        return "Request";
+        
+        JSONObject json = new JSONObject();
+        json.append("action", action);
+        
+        if (model != null) {
+            json.put("model", new JSONObject());
+            json.getJSONObject("model").append("id", model.id);
+            json.getJSONObject("model").append("namespace", model.namespace);
+            json.getJSONObject("model").append("text", model.text);
+        }
+        
+        if (scenario != null) {
+            json.put("scenario", new JSONObject());
+            json.getJSONObject("scenario").append("id", scenario.id);
+            json.getJSONObject("scenario").append("namespace", scenario.namespace);
+            json.getJSONObject("scenario").append("text", scenario.text);
+        }
+        
+        return json.toString();
     }
 
     public static class Model {
@@ -87,6 +136,5 @@ public class Request {
         public int id;
         public int studyId;
         public String text;
-        public String compiled;
     }
 }

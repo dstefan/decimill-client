@@ -29,7 +29,7 @@ public class Main {
 
         int portNumber = 0;
 
-        // Try to parse the first parameter into a port number
+        // Parse first parameter to a port number
         try {
             portNumber = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
@@ -40,7 +40,7 @@ public class Main {
         try {
             InetSocketAddress addr = new InetSocketAddress(portNumber);
             HttpServer server = HttpServer.create(addr, 0);
-            server.createContext("/api", new ApiHandler());
+            server.createContext("/", new RequestHandler());
             server.setExecutor(null);
             server.start();
         } catch (IOException e) {
@@ -48,17 +48,19 @@ public class Main {
         }
     }
 
-    public static class ApiHandler implements HttpHandler {
+    public static class RequestHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange http) throws IOException {
+            
+            System.out.println("Accepting a http request from " + http.getRemoteAddress());
 
             String requestBody = readRequestBody(http);
             Response response;
 
             try {
                 Request request = Request.parseRequest(requestBody);
-                response = new Response("OK", "David");
+                response = new Response("OK", request.toString());
             } catch (JSONException e) {
                 response = new Response("Error", e.getMessage());
             }
