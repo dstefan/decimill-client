@@ -1,4 +1,3 @@
-
 package decimill.server;
 
 import org.json.JSONObject;
@@ -8,12 +7,18 @@ import org.json.JSONObject;
  */
 public class Response {
     
-    public String status;
-    public String body;
+    public final String status;
+    public final String body;
+    public final String path;
     
-    public Response(String status, String body) {
+    public Response(String status, String body, String path) {
         this.status = status;
         this.body = body;
+        this.path = path;
+    }
+    
+    public Response(String status, String body) {
+        this(status, body, "");
     }
     
     @Override
@@ -22,6 +27,7 @@ public class Response {
         JSONObject json = new JSONObject();
         json.put("status", status);
         json.put("body", body);
+        json.put("path", path);
         
         return json.toString();
     }

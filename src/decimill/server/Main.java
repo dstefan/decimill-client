@@ -3,12 +3,16 @@ package decimill.server;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import decimill.parser.CompilerException;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import jviz.JvizException;
 import org.json.JSONException;
 
 /**
@@ -40,7 +44,8 @@ public class Main {
         try {
             InetSocketAddress addr = new InetSocketAddress(portNumber);
             HttpServer server = HttpServer.create(addr, 0);
-            server.createContext("/", new RequestHandler());
+            server.createContext("/compile", new CompileRequestHandler());
+            server.createContext("/img", new ImgRequestHandler());
             server.setExecutor(null);
             server.start();
         } catch (IOException e) {
@@ -48,11 +53,11 @@ public class Main {
         }
     }
 
-    public static class RequestHandler implements HttpHandler {
+    public static class CompileRequestHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange http) throws IOException {
-            
+
             System.out.println("Accepting a http request from " + http.getRemoteAddress());
 
             String requestBody = readRequestBody(http);
@@ -60,9 +65,22 @@ public class Main {
 
             try {
                 Request request = Request.parseRequest(requestBody);
-                response = new Response("OK", request.toString());
-            } catch (JSONException e) {
+                String compiled = "";
+
+                if (request.action.equals("model")) {
+                    compiled = Worker.compileModel(
+                            request.model.id,
+                            request.model.namespace,
+                            request.model.text
+                    );
+                }
+
+                response = new Response("OK", compiled);
+
+            } catch (JSONException | JvizException e) {
                 response = new Response("Error", e.getMessage());
+            } catch (CompilerException e) {
+                response = new CompilerExceptionResponse(e.getMessage(), e.getLine(), e.getCharPos());
             }
 
             String responseString = response.toString();
@@ -99,6 +117,28 @@ public class Main {
             }
 
             return requestBody;
+        }
+    }
+
+    public static class ImgRequestHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange http) throws IOException {
+
+            System.out.println("Accepting an image request from " + http.getRemoteAddress());
+
+            // Build image path from URI (trim the "/img/" part)
+            String uriString = http.getRequestURI().toString();
+            String path = "img/" + uriString.substring(5, uriString.length());
+
+            File imgPath = new File(path);
+
+            try (OutputStream outputStream = http.getResponseBody()) {
+                http.sendResponseHeaders(200, imgPath.length());
+                Files.copy(imgPath.toPath(), outputStream);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
         }
     }
 
