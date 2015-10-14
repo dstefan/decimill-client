@@ -1,0 +1,3 @@
+mysql.user=root
+mysql.password=
+dot.out=C:/dev/projects/decimill/decimill-web-frontend/application/images/models/
