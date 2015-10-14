@@ -1,7 +1,6 @@
-/nbproject/
-/.build.xml
-/build.xml
-/manifest.mf
-/config
 /dist/
 /build/
+/manifest.mf
+/nbproject/
+/build.xml
+/img/
